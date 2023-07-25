@@ -9,3 +9,6 @@ Run these command
 for undo run this
 ``` npx sequelize-cli db:migrate:undo:all ```
 Note you need to create todo
+
+# Note 
+You will also need to install postgres sql in your local mechine & connect it on sql workbench or DBraver desktop app
