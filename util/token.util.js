@@ -17,12 +17,15 @@ const verifyAccessToken = async (token) => {
   return await jwt.verify(token, process.env.TOKEN_SECRET);
 };
 
-const getClientToken = () => {
-  return 
-}
+const parseToken = (authorizationHeader) => {
+  const BearerToken = authorizationHeader;
+  let token = BearerToken.split(" ");
+  token = token[1];
+  return token;
+};
 
 module.exports = {
   generateAccessToken,
-  verifyAccessToken
+  verifyAccessToken,
+  parseToken,
 };
-

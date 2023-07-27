@@ -1,0 +1,20 @@
+{
+    "create": {
+        "id" : "/create",
+        "type" : "object",
+        "properties" : {
+            "userName" : {
+                "type": "string",
+                "required" : true
+            },
+            "email" : {
+                "type": "email",
+                "required" : true
+            },
+            "password" : {
+                "type": "string",
+                "required" : true
+            }
+        }
+    }
+}
