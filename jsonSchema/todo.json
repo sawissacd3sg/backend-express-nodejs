@@ -1,0 +1,30 @@
+{
+  "create": {
+    "id": "/create",
+    "type": "object",
+    "properties": {
+      "todo": {
+        "type": "string",
+        "require": true
+      }
+    }
+  },
+  "update": {
+    "id": "/update",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "number",
+        "require": true
+      },
+      "status": {
+        "type": "boolean",
+        "require": true
+      },
+      "todo": {
+        "type": "string",
+        "require": true
+      }
+    }
+  }
+}

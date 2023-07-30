@@ -25,6 +25,15 @@ exports.getUser = async (id) => {
   });
 };
 
+exports.getUserByEmail = async (email) => {
+  return await User.findOne({
+    attributes: ["id", "userName", "email"],
+    where: {
+      email,
+    },
+  });
+};
+
 exports.getAllUser = async () => {
   return await User.findAll({ attributes: ["id", "userName", "email"] });
 };

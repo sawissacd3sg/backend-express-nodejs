@@ -1,6 +1,6 @@
 "use strict";
 
-const { User, sequelize } = require("../database/models");
+const { sequelize } = require("../database/models");
 const {
   getUser,
   getAllUser,

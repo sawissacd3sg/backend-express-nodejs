@@ -1,76 +1,55 @@
 const { generateAccessToken } = require("../util/token.util");
 const { comparePassword } = require("../util/crypto.util");
-const { User, Token, sequelize } = require("../database/models");
+const { sequelize } = require("../database/models");
+const { Validator } = require("jsonschema");
+const { getSchema } = require("../util/schema.util");
+const { createResponse } = require("../util/response.util");
+const { getUserByEmail } = require("../services/user");
+const { createToken } = require("../services/token");
+
+const validator = new Validator();
 
 exports.login = async (req, res) => {
-  const user = req.body.user;
+  //* valid body request
+  const result = validator.validate(req.body, getSchema("auth.auth"), "/auth");
 
-  if (!user.email) {
-    return res.status(500).json({
-      status: "fail",
-      message: "Invalid Email : Empty!",
-    });
-  }
+  if (result && !result.valid)
+    return res
+      .status(400)
+      .json(
+        createResponse("fail", "body email:string, password:string required.")
+      );
 
-  if (!user.password) {
-    return res.status(500).json({
-      status: "fail",
-      message: "Invalid Password : Empty!",
-    });
-  }
+  const { id, email, password } = await getUserByEmail(result.instance.email);
 
-  const { id, email, password } = await User.findOne({
-    attributes: ["id", "email", "password"],
-    where: {
-      email: user.email,
-    },
-  });
+  const passwordPass = await comparePassword(
+    result.instance.password,
+    password
+  );
 
-  if (!password) {
-    return res.status(500).json({
-      status: "fail",
-      message: "Invalid user account & password",
-    });
-  }
-
-  const passwordPass = await comparePassword(user.password, password);
   const createdToken = await generateAccessToken(email);
 
   try {
-    if (passwordPass) {
-      await sequelize.transaction(async (transaction) => {
-        const tokenCreated = await Token.create(
-          {
-            userId: id,
-            token: createdToken,
-          },
-          {
-            transaction,
-          }
-        );
+    if (!passwordPass)
+      return res
+        .status(400)
+        .json(createResponse("fail", "invalid user account & password."));
 
-        if (!tokenCreated) {
-          return res.status(500).json({
-            status: "fail",
-            message: "Error: Can't create token",
-          });
-        }
+    await sequelize.transaction(async (transaction) => {
+      const tokenCreated = await createToken(id, createdToken, transaction);
 
-        return res.json({
-          status: "success",
+      if (!tokenCreated)
+        return res
+          .status(400)
+          .json(createResponse("fail", "fail to create token."));
+
+      return res.json(
+        createResponse("success", "token created.", {
           verifyToken: createdToken,
-        });
-      });
-    } else {
-      return res.status(500).json({
-        status: "fail",
-        message: "Invalid user account & password",
-      });
-    }
-  } catch (error) {
-    return res.status(500).json({
-      status: "fail",
-      message: error,
+        })
+      );
     });
+  } catch (error) {
+    return res.status(400).json(createResponse("fail", error));
   }
 };

@@ -1,5 +1,5 @@
 const { QueryTypes } = require("sequelize");
-const { sequelize } = require("../database/models");
+const { Todo, sequelize } = require("../database/models");
 
 exports.getTodos = async (minify) => {
   const temp = [];
@@ -52,4 +52,27 @@ exports.getTodos = async (minify) => {
   }));
 
   return todoUsers;
+};
+
+exports.createTodos = async (list, userId, status, transaction) => {
+  return await Todo.create(
+    {
+      list,
+      userId,
+      status,
+    },
+    {
+      transaction,
+    }
+  );
+};
+
+exports.updateTodos = async (updatedList, id, userId, transaction) => {
+  return await Todo.update(updatedList, {
+    where: {
+      id,
+      userId,
+    },
+    transaction,
+  });
 };
