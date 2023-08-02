@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
       );
 
   const { id, email, password } = await getUserByEmail(result.instance.email);
-
+  
   const passwordPass = await comparePassword(
     result.instance.password,
     password

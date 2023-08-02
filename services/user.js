@@ -27,7 +27,7 @@ exports.getUser = async (id) => {
 
 exports.getUserByEmail = async (email) => {
   return await User.findOne({
-    attributes: ["id", "userName", "email"],
+    attributes: ["id", "userName", "email", 'password'],
     where: {
       email,
     },
