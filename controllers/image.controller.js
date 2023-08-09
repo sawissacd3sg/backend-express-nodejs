@@ -44,14 +44,16 @@ function fileFilter(req, file, cb) {
 const upload = multer({ storage, fileFilter }).single("image");
 
 module.exports.verifyImage = async (req, res, next) => {
-  return await upload(req, res, function (log) {
+  await upload(req, res, function (log) {
     if (log instanceof multer.MulterError) {
-      return res.status(500).json(createResponse("fail", log));
+      res.status(500).json(createResponse("fail", log));
+      return 
     }
     if (log) {
-      return res.status(400).json(createResponse("fail", log));
+      res.status(400).json(createResponse("fail", log));
+      return 
     }
-    next();
+  next();
   });
 };
 
@@ -71,7 +73,6 @@ module.exports.uploadImage = async (req, res) => {
     userId: user.id,
     imagePath: req.file.filename.split(".")[0],
   });
-
 
   return res.json(
     createResponse("success", "image uploaded & created.", {
