@@ -1,7 +1,6 @@
 {
-
   "scripts": {
-    "dev" : "nodemon ./server.js"
+    "dev": "nodemon ./server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -12,9 +11,11 @@
     "jsonschema": "^1.4.1",
     "jsonwebtoken": "^9.0.1",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "pg": "^8.11.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.32.1",
-    "sequelize-cli": "^6.6.1"
+    "sequelize-cli": "^6.6.1",
+    "short-uuid": "^4.2.2"
   }
 }

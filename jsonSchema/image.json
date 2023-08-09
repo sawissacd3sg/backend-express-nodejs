@@ -1,0 +1,12 @@
+{
+  "upload": {
+    "id": "/upload",
+    "type": "object",
+    "properties": {
+      "fileName": {
+        "type": "string",
+        "required": true
+      }
+    }
+  }
+}
